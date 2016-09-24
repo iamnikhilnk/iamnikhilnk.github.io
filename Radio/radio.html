@@ -1,0 +1,61 @@
+<!-- [Radio.html 2.0.3.0] [Nikhil N K] [09Mar2016] -->
+<!DOCTYPE html>
+<html manifest="radio.appcache">
+	<head>
+		<title>Radio by NK&trade; - Nikhil N K</title>
+		<meta name="viewport" content="width=device-width initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="icon" href="./favicon.ico">
+		<link rel="stylesheet" href="./styles/font-awesome.min.css">
+		<link rel="stylesheet" href="./styles/radio.css">
+		<script type="text/javascript" src="./scripts/stations.js"></script>
+		<script type="text/javascript" src="./scripts/radio.js"></script>
+		<script type="text/javascript" src="./scripts/cheatcode.js"></script>
+	</head>
+	<body>
+		<div class="ui app">
+			<div class="list">
+				<div class="menu-header">Stations</div>
+				<div class="lang-container">
+					<select class="custom-select" id="lang"></select>
+				</div>
+				<div>
+					<ul id="stations"></ul>
+				</div>
+			</div>
+			<div class="main">
+				<div class="header">
+					<div class="menu"><button class="fa fa-bars ui-button"></button></div>
+					<div class="title">Radio</div>
+					<div class="power"><button class="fa fa-power-off ui-button"></button></div>
+				</div>
+				<div class="content">
+					<div id="frequency">&#9835;</div>
+					<div>
+						<span id="name"></span>
+						<span id="favourite"><button class="fa ui-button"></button></span>
+					</div>
+					<div id="controls">
+						<div id="backward"><button class="fa fa-step-backward ui-button"></button></div>
+						<div id="play"><button class="fa fa-play ui-button"></button></div>
+						<div id="forward"><button class="fa fa-step-forward ui-button"></button></div>
+					</div>
+				</div>
+				<div class="seekbar">
+					<span id="message">Paused</span>
+				</div>
+				<div class="volume">
+					<div><button id="volumeControl" class="fa fa-volume-up ui-button"></button></div>
+				</div>
+			</div>
+		</div>
+		<div class="overlay-hidden">
+			<div></div>
+			<div class="contentholder">
+				<div></div>
+				<div class="qrcontent"></div>
+				<div></div>
+			</div>
+			<div></div>
+		</div>
+	</body>
+</html>
