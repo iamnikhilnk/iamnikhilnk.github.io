@@ -1,14 +1,22 @@
 CACHE MANIFEST
-# 29/01/2017 : v3.0.2.1
+# 26/06/2017 : v3.0.3.0
 
 CACHE:
 ./favicon.ico
+./manifest.json
 ./radio.html
 ./fonts/fontawesome-webfont.ttf?v=4.4.0
 ./fonts/fontawesome-webfont.woff?v=4.4.0
 ./fonts/fontawesome-webfont.woff2?v=4.4.0
 ./images/cursor_night.png
 ./images/radio.qr.blocks.jpg
+./images/radio_36.png
+./images/radio_48.png
+./images/radio_72.png
+./images/radio_96.png
+./images/radio_128.png
+./images/radio_144.png
+./images/radio_192.png
 ./scripts/cheatcode.js
 ./scripts/radio.js
 ./scripts/stations.js
