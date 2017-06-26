@@ -39,6 +39,6 @@
     }
   ],
   "start_url": "radio.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "any"
 }
