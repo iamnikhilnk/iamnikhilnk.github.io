@@ -58,7 +58,7 @@ function prevVerse() {
 	if(!isLongTap && bible.current.verse > 0 && bible.current.verses.length > 0) {
 		setVerse(bible.current.verses[bible.current.verse - 1]);
 	}
-	if(--bible.current.verse <= 0)
+	if(!isLongTap && --bible.current.verse <= 0)
 	{
 		if(bible.current.chapter > 0) {
 			bible.current.chapter--;
@@ -81,7 +81,7 @@ function nextVerse() {
 		&& bible.current.verses.length > 0) {
 		setVerse(bible.current.verses[bible.current.verse + 1]);
 	}
-	if(++bible.current.verse > bible.index[bible.current.author][bible.current.chapter] - 1)
+	if(!isLongTap && ++bible.current.verse > bible.index[bible.current.author][bible.current.chapter] - 1)
 	{
 		if(bible.index[bible.current.author].length > bible.current.chapter) {
 			bible.current.chapter++;
