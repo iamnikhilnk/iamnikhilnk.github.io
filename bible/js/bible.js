@@ -109,9 +109,10 @@ function clearText() {
 function autoPlay() {
 	if(!isAutoPlay) {
 		nextVerse();
+		var delay = $('#word').length * 125;
 		autoPlayTimer = setInterval(function() {
 			nextVerse();
-		}, 10000);
+		}, delay);
 	} else {
 		clearInterval(autoPlayTimer);
 	}
