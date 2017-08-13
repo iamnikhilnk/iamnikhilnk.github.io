@@ -1,15 +1,36 @@
 this.addEventListener('install', function(event) {
 	event.waitUntil(
-		caches.open('bible_v1.0').then(function(cache) {
+		caches.open('bible_v1.1').then(function(cache) {
 			return cache.addAll([
 				'/',
 				'bible.html',
+				'manifest.json',
 				'css/bible.css',
 				'js/jquery-1.8.3.js',
 				'js/responsivevoice.js',
 				'js/bible.js',
 				'media/network.error.mp3',
-				'media/instructions.mp3'
+				'media/instructions.mp3',
+				'media/autoplay.png',
+				'media/pin.png',
+				'media/speaker.png',
+				'media/translate.png',
+				'icons/android-icon-192x192.png',
+				'icons/android-icon-36x36.png',
+				'icons/android-icon-48x48.png',
+				'icons/apple-icon-114x114.png',
+				'icons/apple-icon-120x120.png',
+				'icons/apple-icon-144x144.png',
+				'icons/apple-icon-152x152.png',
+				'icons/apple-icon-180x180.png',
+				'icons/apple-icon-57x57.png',
+				'icons/apple-icon-60x60.png',
+				'icons/apple-icon-72x72.png',
+				'icons/apple-icon-76x76.png',
+				'icons/favicon-16x16.png',
+				'icons/favicon-32x32.png',
+				'icons/favicon-96x96.png',
+				'icons/ms-icon-144x144.png'
 			]);
 		})
 	);
@@ -29,7 +50,7 @@ self.addEventListener('fetch', function(event) {
 });
 
 this.addEventListener('activate', function(event) {
-  var cacheWhitelist = ['bible_v1.0'];
+  var cacheWhitelist = ['bible_v1.1'];
 
   event.waitUntil(
     caches.keys().then(function(keyList) {
