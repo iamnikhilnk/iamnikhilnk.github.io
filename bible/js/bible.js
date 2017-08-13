@@ -80,7 +80,7 @@ function prevVerse(isSpeak) {
 	isLongTap = false;
 }
 
-function nextVerse(isSpeak) {
+function nextVerse(event, isSpeak) {
 	if((!isLongTap || isAutoPlay) && bible.current.verse + 1 > bible.index[bible.current.author][bible.current.chapter] - 1)
 	{
 		if(bible.index[bible.current.author].length > bible.current.chapter) {
@@ -112,7 +112,7 @@ function clearText() {
 function autoPlay(event, flag) {
 	if(!isAutoPlay || flag) {
 		isAutoPlay = true;
-		nextVerse(true);
+		nextVerse(event, true);
 		setTimeout(function() {
 			var delay = 125 * $('#word').text().length;
 			autoPlayTimer = setTimeout(function() {
