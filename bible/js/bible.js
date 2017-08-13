@@ -97,7 +97,7 @@ function nextVerse(isSpeak) {
 	}
 	if((!isLongTap || isAutoPlay) && bible.current.verse < bible.index[bible.current.author][bible.current.chapter] - 1
 		&& bible.current.verses.length > 0) {
-		setVerse(bible.current.verses[++bible.current.verse], true);
+		setVerse(bible.current.verses[++bible.current.verse], isSpeak);
 	}
 	isLongTap = false;
 }
