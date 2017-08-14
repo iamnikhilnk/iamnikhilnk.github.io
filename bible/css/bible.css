@@ -86,33 +86,23 @@ select {
 	cursor: pointer;
 }
 .controls {
-	width: 88vw;
+	width: 90vw;
     position: absolute;
     z-index: 100;
-    padding: 30px 6vw 0 6vw;
+    padding: 30px 5vw 0 5vw;
+	font-size: 5vw;
+	text-align: center;
 }
 .controls > div {
-	height: 12vw;
-    width: 12vw;
+	height: 7.2vw;
+    width: 7.2vw;
     float: left;
-    margin: 0 5vw;
+    margin: 0 2vw;
+    display: table;
 }
-.pin, .autoplay, .translate, .speaker {
-	background-repeat: no-repeat;
-	background-size: 100%;
-	background-position: top;
-}
-.pin {
-	background-image: url('../media/pin.png');
-}
-.autoplay {
-	background-image: url('../media/autoplay.png');
-}
-.translate {
-	background-image: url('../media/translate.png');
-}
-.speaker {
-	background-image: url('../media/speaker.png');
+.controls i {
+	display: table-cell;
+    vertical-align: middle;
 }
 .title {
 	position: absolute;
