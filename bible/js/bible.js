@@ -1,21 +1,36 @@
 var bible = {};
 bible.index = {};
+bible.index.mathew = [25, 23, 17, 25, 48, 34, 29, 34, 38, 42, 30, 50, 58, 36, 39, 28, 27, 35, 30, 34, 46, 46, 39, 51, 46, 75, 66, 20];
+bible.index.mark = [45, 28, 35, 41, 43, 56, 37, 38, 50, 52, 33, 44, 37, 72, 47, 20];
+bible.index.luke = [80, 52, 38, 44, 39, 49, 50, 56, 62, 42, 54, 59, 35, 35, 32, 31, 37, 43, 48, 47, 38, 71, 56, 53];
 bible.index.john = [51, 25, 36, 54, 47, 71, 53, 59, 41, 41, 57, 50, 38, 31, 27, 33, 26, 40, 42, 31, 25];
+bible.index.acts = [26, 47, 26, 37, 42, 15, 60, 40, 43, 48, 30, 25, 52, 28, 40, 40, 34, 28, 41, 38, 40, 30, 35, 27, 27, 32, 44, 30];
 bible.current = {};
 bible.current.author = 'john';
 bible.current.chapter = 0;
 bible.current.verse = 0;
 bible.current.verses = [];
 bible.current.direction = 1;
+bible.getIndexNumber = function() {
+	return Object.keys(this.index).indexOf(this.current.author);
+};
+bible.getAuthor = function(index) {
+	return Object.keys(this.index)[index];
+};
 
 var longTapTimer;
-var isLongTap;
 var isAutoPlay;
 var autoPlayTimer;
 var hideControlTimer;
+var isReset;
 
 function init() {
-	new Audio('media/instructions.mp3').play();
+	if(localStorage.bible) {
+		Object.assign(bible, JSON.parse(localStorage.bible));
+		cacheVerseCallback();
+	} else {
+		new Audio('media/instructions.mp3').play();
+	}
 	if ('serviceWorker' in navigator) {
 		navigator.serviceWorker.register('serviceworker.js')
 		.then(function() { console.log("Service Worker Registered"); });
@@ -26,13 +41,10 @@ function init() {
 		e.preventDefault();
 		e.stopPropagation();
 	});
-	cacheVerse(bible.current.author, bible.current.chapter + 1, 1, bible.index[bible.current.author][bible.current.chapter]);
-	$('.overlay').mouseup(function(e){
-		clearTimeout(longTapTimer);
-	}).mousedown(function(){
-		longTapTimer = setTimeout(showControls,500);
-	});
-	$('.overlay').contextmenu(showControls);
+	if(bible.current.verses.length == 0) {
+		cacheVerse(bible.current.author, bible.current.chapter + 1, 1, bible.index[bible.current.author][bible.current.chapter]);
+	}
+	$('body').contextmenu(showControls);
 	$('.speaker').click(function() {
 		speak($('.word').text());
 	});
@@ -44,10 +56,39 @@ function init() {
 		$('#google_translate_element').addClass('show').removeClass('hide');
 		clearTimeout(hideControlTimer);
 	});
+	$(window).bind('beforeunload', function(e) {
+		if(isReset) {
+			localStorage.removeItem('bible');
+		} else {
+			localStorage.bible = JSON.stringify(bible);
+		}
+		e = null;
+	});
+	$('.reset').click(function() {
+		isReset = true;
+		location.reload();
+	});
+	$('.previous').click(function() {
+		if(bible.getIndexNumber() > 0) {
+			bible.current.chapter = 0;
+			bible.current.verse = 0;
+			prevVerse(event, false, true);
+		}
+	});
+	$('.next').click(function() {
+		if(bible.getIndexNumber() < Object.keys(bible.index).length - 1) {
+			bible.current.chapter = bible.index[bible.current.author].length - 1;
+			bible.current.verse = bible.index[bible.current.author][bible.current.chapter];
+			nextVerse();
+		}
+	});
+	$('.book').click(function() {
+	});
+	$('.pin').click(function() {
+	});
 }
 
 function showControls() {
-	isLongTap = true;
 	$('.controls').addClass('show').removeClass('hide');
 	$('.title').addClass('show').removeClass('hide');
 	$('#google_translate_element').addClass('hide').removeClass('show');
@@ -59,47 +100,53 @@ function showControls() {
 	return false;
 }
 
-function prevVerse(isSpeak) {
-	if((!isLongTap || isAutoPlay) && bible.current.verse - 1 <= 0)
+function prevVerse(event, isSpeak, isFromStart) {
+	if(bible.current.verse - 1 < 0)
 	{
 		if(bible.current.chapter > 0) {
 			bible.current.chapter--;
 			bible.current.verse = bible.index[bible.current.author][bible.current.chapter] - 1;
-			$('.cssload-container').removeClass('hide-content');
-			$('.content').addClass('hide').removeClass('show');
-			clearText();
-			cacheVerse(bible.current.author, bible.current.chapter + 1, 1, bible.index[bible.current.author][bible.current.chapter]);
+		} else if(bible.getIndexNumber() > 0) {
+			bible.current.author = bible.getAuthor(bible.getIndexNumber() - 1);
+			bible.current.chapter = bible.index[bible.current.author].length - 1;
+			bible.current.verse = bible.index[bible.current.author][bible.current.chapter] - 1;
 		} else {
-			// change author
-			bible.current.chapter = 0;
+			return;
 		}
-	}
-	if((!isLongTap || isAutoPlay) && bible.current.verse > 0 && bible.current.verses.length > 0) {
+		$('.cssload-container').removeClass('hide-content');
+		$('.content').addClass('hide').removeClass('show');
+		clearText();
+		if(isFromStart) {
+			bible.current.chapter = 0;
+			bible.current.verse = 0;
+		}
+		cacheVerse(bible.current.author, bible.current.chapter + 1, 1, bible.index[bible.current.author][bible.current.chapter]);
+	} else if(bible.current.verse > 0 && bible.current.verses.length > 0) {
 		setVerse(bible.current.verses[--bible.current.verse], isSpeak);
 	}
-	isLongTap = false;
 }
 
 function nextVerse(event, isSpeak) {
-	if((!isLongTap || isAutoPlay) && bible.current.verse + 1 > bible.index[bible.current.author][bible.current.chapter] - 1)
+	if(bible.current.verse + 1 > bible.index[bible.current.author][bible.current.chapter] - 1)
 	{
-		if(bible.index[bible.current.author].length > bible.current.chapter) {
+		if(bible.index[bible.current.author].length > bible.current.chapter + 1) {
 			bible.current.chapter++;
 			bible.current.verse = 0;
-			$('.cssload-container').removeClass('hide-content');
-			$('.content').addClass('hide').removeClass('show');
-			clearText();
-			cacheVerse(bible.current.author, bible.current.chapter + 1, 1, bible.index[bible.current.author][bible.current.chapter]);
-		} else {
-			// change author
+		} else if(bible.getIndexNumber() < Object.keys(bible.index).length - 1) {
+			bible.current.author = bible.getAuthor(bible.getIndexNumber() + 1);
 			bible.current.chapter = 0;
+			bible.current.verse = 0;
+		} else {
+			return;
 		}
-	}
-	if((!isLongTap || isAutoPlay) && bible.current.verse < bible.index[bible.current.author][bible.current.chapter] - 1
+		$('.cssload-container').removeClass('hide-content');
+		$('.content').addClass('hide').removeClass('show');
+		clearText();
+		cacheVerse(bible.current.author, bible.current.chapter + 1, 1, bible.index[bible.current.author][bible.current.chapter]);
+	} else if(bible.current.verse < bible.index[bible.current.author][bible.current.chapter] - 1
 		&& bible.current.verses.length > 0) {
 		setVerse(bible.current.verses[++bible.current.verse], isSpeak);
 	}
-	isLongTap = false;
 }
 
 function clearText() {
@@ -153,7 +200,7 @@ function cacheVerse(author, chapter, start, end) {
 }
 
 function cacheVerseCallback(response) {
-	if(response.verses && response.verses.length > 0) {
+	if(response && response.verses && response.verses.length > 0) {
 		bible.current.verses = response.verses
 	}
 	if($('#word').text() == '') {
