@@ -112,7 +112,7 @@ function init() {
 
 function onInitComplete(data) {
 	if(data != null && data.length > 0) {
-		Object.assign(data[0], JSON.parse(localStorage.bible));
+		Object.assign(bible, data[0]);
 		cacheVerseCallback();
 	} else {
 		new Audio('media/instructions.mp3').play();
