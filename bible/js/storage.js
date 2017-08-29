@@ -8,7 +8,7 @@ function Storage() {
 		window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 		var dBOpenRequest = window.indexedDB.open(this.store, 1);
 
-		dBOpenRequest.onerror = onrequesterrorl;
+		dBOpenRequest.onerror = onrequesterror;
 
 		dBOpenRequest.onsuccess = onrequestsuccess;
 
