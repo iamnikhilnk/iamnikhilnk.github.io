@@ -10,9 +10,10 @@ function Storage() {
 		var dBOpenRequest = window.indexedDB.open(this.store, 1);
 
 		dBOpenRequest.onerror = onrequesterror;
-
-		dBOpenRequest.onsuccess = onrequestsuccess;
-
+		dBOpenRequest.onsuccess = function(event) {
+			this.db = event.target.result;
+			onrequestsuccess(event);
+		};
 		dBOpenRequest.onupgradeneeded = function(event) {
 			this.db = event.target.result;
 			this.db.onerror = onupgradeerror;
