@@ -8,13 +8,13 @@ function Storage() {
 		window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 		window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 		var dBOpenRequest = window.indexedDB.open(this.store, 1);
+		_this = this;
 
 		dBOpenRequest.onerror = onrequesterror;
 		dBOpenRequest.onsuccess = function(event) {
-			this.db = event.target.result;
+			_this.db = event.target.result;
 			onrequestsuccess(event);
 		};
-		_this = this;
 		dBOpenRequest.onupgradeneeded = function(event) {
 			_this.db = event.target.result;
 			this.db.onerror = onupgradeerror;
