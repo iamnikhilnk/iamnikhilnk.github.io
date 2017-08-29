@@ -53,7 +53,7 @@ function init() {
 	storage = new Storage();
 	storage.init('version', 'bible', function() {
 		storage.getData('bible', console.log, onInitComplete, console.log);
-	}, onInitComplete, console.log);
+	}, console.log, console.log);
 	if ('serviceWorker' in navigator) {
 		navigator.serviceWorker.register('serviceworker.js')
 		.then(function() { console.log("Service Worker Registered"); });

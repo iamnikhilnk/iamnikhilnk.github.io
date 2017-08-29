@@ -2,7 +2,7 @@ function Storage() {
 	this.store = null;
 	this.db = null;
 
-	this.init = function(key, store, onrequesterror, onrequestsuccess, onupgradeerror) {
+	this.init = function(key, store, onrequestsuccess, onrequesterror, onupgradeerror) {
 		this.store = store || this.store;
 		window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 		window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
