@@ -80,6 +80,8 @@ function init() {
 		if(isReset) {
 			storage.deleteData(version);
 		} else {
+			bible.getIndexNumber = null;
+			bible.getAuthor = null;
 			storage.setData(bible);
 		}
 		e = null;
