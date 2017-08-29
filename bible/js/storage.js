@@ -1,5 +1,6 @@
 function Storage() {
 	this.store = null;
+	this.db = null;
 
 	this.init = function(key, store, onrequesterror, onrequestsuccess, onupgradeerror) {
 		this.store = store || this.store;
@@ -13,17 +14,15 @@ function Storage() {
 		dBOpenRequest.onsuccess = onrequestsuccess;
 
 		dBOpenRequest.onupgradeneeded = function(event) {
-			var db = event.target.result;
-
-			db.onerror = onupgradeerror;
-
-			var objectStore = db.createObjectStore(store, { keyPath: key });
+			this.db = event.target.result;
+			this.db.onerror = onupgradeerror;
+			var objectStore = this.db.createObjectStore(store, { keyPath: key });
 		};
 	};
 
 	this.getData = function(store, onsuccess, oncomplete, onerror) {
 		this.store = store || this.store;
-		var transaction = db.transaction(this.store);
+		var transaction = this.db.transaction(this.store);
 		var objectStore = transaction.objectStore(this.store);
 		var result = [];
 		
@@ -44,7 +43,7 @@ function Storage() {
 
 	this.setData = function(data, store, onsuccess, oncomplete, onerror) {
 		this.store = store || this.store;
-		var transaction = db.transaction([this.store], "readwrite");
+		var transaction = this.db.transaction([this.store], "readwrite");
 		
 		transaction.oncomplete = oncomplete;
 		transaction.onerror = onerror;
@@ -53,7 +52,7 @@ function Storage() {
 
 	this.deleteData = function(key, store, onsuccess, oncomplete, onerror) {
 		this.store = store || this.store;
-		var transaction = db.transaction([this.store], "readwrite");
+		var transaction = this.db.transaction([this.store], "readwrite");
 
 		transaction.onerror = onerror;
 		transaction.oncomplete = oncomplete;
