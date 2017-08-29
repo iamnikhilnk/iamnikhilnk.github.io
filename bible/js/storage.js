@@ -17,7 +17,7 @@ function Storage() {
 		};
 		dBOpenRequest.onupgradeneeded = function(event) {
 			_this.db = event.target.result;
-			this.db.onerror = onupgradeerror;
+			_this.db.onerror = onupgradeerror;
 			var objectStore = this.db.createObjectStore(store, { keyPath: key });
 		};
 	};
