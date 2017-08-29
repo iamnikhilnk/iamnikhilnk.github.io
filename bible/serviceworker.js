@@ -1,6 +1,6 @@
 this.addEventListener('install', function(event) {
 	event.waitUntil(
-		caches.open('bible_v1.2').then(function(cache) {
+		caches.open('bible_v1.3').then(function(cache) {
 			return cache.addAll([
 				'/',
 				'bible.html',
@@ -10,6 +10,7 @@ this.addEventListener('install', function(event) {
 				'css/font-awesome.min.css',
 				'js/jquery-1.8.3.js',
 				'js/responsivevoice.js',
+				'js/storage.js',
 				'js/bible.js',
 				'media/network.error.mp3',
 				'media/instructions.mp3',
@@ -51,7 +52,7 @@ self.addEventListener('fetch', function(event) {
 });
 
 this.addEventListener('activate', function(event) {
-  var cacheWhitelist = ['bible_v1.2'];
+  var cacheWhitelist = ['bible_v1.3'];
 
   event.waitUntil(
     caches.keys().then(function(keyList) {
