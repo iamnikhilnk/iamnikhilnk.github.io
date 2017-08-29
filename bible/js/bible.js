@@ -51,8 +51,9 @@ var storage;
 
 function init() {
 	storage = new Storage();
-	storage.init('version', 'bible', console.log, console.log, console.log);
-	storage.getData('bible', console.log, onInitComplete, console.log);
+	storage.init('version', 'bible', function() {
+		storage.getData('bible', console.log, onInitComplete, console.log);
+	}, onInitComplete, console.log);
 	if ('serviceWorker' in navigator) {
 		navigator.serviceWorker.register('serviceworker.js')
 		.then(function() { console.log("Service Worker Registered"); });
