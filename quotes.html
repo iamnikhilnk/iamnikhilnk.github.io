@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <title>Quotes</title>
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+		#content {
+			background-color: #333333;
+			width: 90vw;
+			height: 81vh; /**intentionally**/
+			padding-right: 5vw;
+			padding-left: 5vw;
+			padding-top: 10vh;
+			padding-bottom: 10vh;
+			display: table-cell;
+			vertical-align: middle;
+			opacity: 0.8;
+		}
+		#message {
+			color: white;
+			font-family: fantasy;
+			font-size: 6vmin;
+			text-align: center;
+			text-shadow: 12px 12px 7px rgba(0,0,0,.5);
+		}
+		#author {
+			color: #cccccc;
+			font-family: sans-serif;
+			font-size: 3vmin;
+			text-align: right;
+			margin-right: 1vmin;
+			margin-top: 4vh;
+			text-shadow: 12px 12px 7px rgba(0,0,0,.5);
+		}
+	</style>
+	<script>
+	var url = 'http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=40';
+	var quotes = [];
+	var message;
+	var author;
+	var content;
+	var retry = 3;
+
+	function ajax(type, url, callback, isXMLOutput) {
+		var xmlHttp = new XMLHttpRequest() || new ActiveXObject('Microsoft.XMLHTTP');
+
+		xmlHttp.onreadystatechange = function() {
+			if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				if(callback) {
+					callback(isXMLOutput ? xmlHttp.responseXML : xmlHttp.responseText);
+				}
+			} else if(xmlHttp.readyState == 4 && xmlHttp.status != 200) {
+				if(callback) {
+					callback();
+				}
+			}
+		};
+		xmlHttp.open(type, url, true);
+		xmlHttp.send();
+	}
+	
+	function processData(_quotes) {
+		quotes = quotes.concat(_quotes);
+		if(quotes.length == _quotes.length) {
+			loadNextQuote();
+		}
+	}
+	
+	function onAjaxResponse(data) {
+		if(data && Array.isArray(data = JSON.parse(data))) {
+			processData(data);
+		} else {
+			if(--retry) {
+				ajax('GET', url, onAjaxResponse);
+			} else {
+				retry = 3;
+			}
+		}
+	}
+	function hexToRgb(hex) {
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+
+	function getRandomColor() {
+		var letters = '0123456789ABCDEF'.split('');
+		var color = '';
+		for (var i = 0; i < 6; i++ ) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+
+	function getContrastYIQ(hexcolor){
+		var r = parseInt(hexcolor.substr(0,2),16);
+		var g = parseInt(hexcolor.substr(2,2),16);
+		var b = parseInt(hexcolor.substr(4,2),16);
+		return ((r*299)+(g*587)+(b*114))/1000;
+	}
+
+	function getAbstractColor() {
+		var hexColor = getRandomColor();
+		var contrast = getContrastYIQ(hexColor);
+		if(contrast > 100) {
+			hexColor = getAbstractColor();
+		}
+		return hexColor;
+	}
+	
+	function loadNextQuote() {
+		var quote = quotes.pop();
+		
+		if(quote && message && author) {
+			content.style.backgroundColor = '#' + getAbstractColor();
+			message.innerHTML = quote.content;
+			author.innerHTML = quote.title;
+		}
+		
+		if(quotes.length < 10) {
+			ajax('GET', url, onAjaxResponse);
+		}
+	}
+	
+	function init() {
+		message = document.querySelector('#message');
+		author = document.querySelector('#author');
+		content = document.querySelector('#content');
+		if(location.protocol != 'http:') {
+			url = 'https://crossorigin.me/' + url;
+		}
+		ajax('GET', url, onAjaxResponse);
+		document.body.onmousedown = loadNextQuote;
+		document.addEventListener("contextmenu", function(e){
+			e.preventDefault();
+		}, false);
+	}
+
+	window.onload = init;
+	</script>
+</head>
+<body>
+	<div id="content">
+		<div id="message">Loading quotes...</div>
+		<div id="author">Please wait...</div>
+	</div>
+</body>
+</html>
