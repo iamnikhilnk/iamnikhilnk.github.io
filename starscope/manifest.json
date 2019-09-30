@@ -1,0 +1,8 @@
+{
+  "name": "Starscope",
+  "icons": [
+  ],
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "any"
+}
