@@ -1,8 +1,14 @@
 {
   "name": "Starscope",
   "icons": [
+     {
+      "src": "facicon.ico
+      "sizes": "48x48",
+      "type": "image/x-ico",
+      "density": 1.0
+    }
   ],
-  "start_url": "",
+  "start_url": "starscope",
   "display": "fullscreen",
   "orientation": "any"
 }
