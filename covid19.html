@@ -1,0 +1,137 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:['corechart']});
+      google.charts.setOnLoadCallback(function() { loadData().then(drawChart)});
+	  var chart = null;
+	  var covidData = null;
+	  
+	  function showDelta() {
+		document.querySelector('#delta').classList.add('disabled');
+		var statewise = covidData.statewise;
+		var dataArray = [['State', 'Active', 'Recovered', 'Deaths']];
+
+		for(var i = 0; i < statewise.length; i++) {
+			var stat = statewise[i];
+			if(stat.state == state.value || (state.value == 'All States' && stat.state != 'Total')) {
+				dataArray.push([stat.state,
+				parseInt(stat.active)-parseInt(stat.deltaconfirmed)+parseInt(stat.deltarecovered)+parseInt(stat.deltadeaths),
+				parseInt(stat.recovered)-parseInt(stat.deltarecovered),
+				parseInt(stat.deaths)-parseInt(stat.deltadeaths)]);
+			}
+		}
+		
+		showChart(dataArray);
+		setTimeout(drawChart, 3000);
+	  }
+
+      function drawChart() {
+		var statewise = covidData.statewise;
+		var dataArray = [['State', 'Active', 'Recovered', 'Deaths']];
+		var state = document.querySelector('#state');
+		var isFirst = state.options.length == 1;
+
+		for(var i = 0; i < statewise.length; i++) {
+			var stat = statewise[i];
+			if(isFirst) {
+				state.options[state.options.length] = new Option(stat.state, stat.state);
+			}
+			if(stat.state == state.value || (state.value == 'All States' && stat.state != 'Total')) {
+				dataArray.push([stat.state, parseInt(stat.active),
+					parseInt(stat.recovered), parseInt(stat.deaths)]);
+			}
+		}
+		
+		showChart(dataArray);
+		document.querySelector('#delta').classList.remove('disabled');
+      }
+	  
+	  function showChart(dataArray) {
+        var data = google.visualization.arrayToDataTable(dataArray);
+		var options = {
+			isStacked: true,
+            title: 'Covid-19',
+            subtitle: 'Covid-19 Statewise Reports',
+			seriesType: 'bars',
+			series: {
+                0: { color: '#0971B2' },
+                1: { color: '#4CC267' },
+                2: { color: '#F7464A' }
+            },
+			tooltip: {isHtml: true},
+			animation:{
+				duration: 1000,
+				easing: 'out'
+			},
+			chartArea: {  width: "75%", height: "50%" },
+			bar: {groupWidth: '80%'},
+			hAxis : {
+				slantedText: true,
+				slantedTextAngle: 90,
+				
+			}
+		};
+		
+		if(!chart) {
+			chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+		}
+
+		chart.draw(data, options);
+	  }
+	  
+	  function loadData() {
+		return new Promise(resolve => {
+			  var xhttp;
+			  if (window.XMLHttpRequest) {
+				xhttp = new XMLHttpRequest();
+			  } else {
+				xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			  }
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				  covidData = JSON.parse(this.responseText);
+				  resolve();
+				}
+			  };
+			  xhttp.open("GET", "https://api.covid19india.org/data.json", true);
+			  xhttp.send();
+			});
+		}
+    </script>
+	<style>
+		body {
+			overflow: hidden;
+		}
+		#delta {
+			background: #0971B2;
+			border: none;
+			color: white;
+			padding: 5px;
+			width: 80px;
+			margin-top: 2vh;
+			cursor: pointer;
+		}
+		#columnchart_values {
+			width: 90vw;
+			height: 90vh;
+		}
+		.disabled {
+			display: none;
+		}
+	</style>
+  </head>
+  <body>
+    <!-- <div id="columnchart_material" style="width: 800px; height: 500px;"></div> -->
+	<div id="columnchart_values"></div>
+	<div style="text-align: center">
+		<input id="delta" type="button" class="disabled" value="Delta" onclick="showDelta()"></input>
+		<select id="state" onchange="drawChart()">
+			<option>All States</option>
+		</select>
+	</div>
+	<script>
+		window.onresize = drawChart;
+	</script>
+  </body>
+</html>
