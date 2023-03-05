@@ -3,7 +3,7 @@
     "background_color": "#000000",
     "display": "fullscreen",
     "scope": "/",
-    "start_url": "/breathe.html",
+    "start_url": "/breath/breathe.html",
     "name": "Breathe",
     "short_name": "Breathe",
     "icons": [
