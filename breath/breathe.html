@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<title>Breathe</title>
+<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<link rel="manifest" href="manifest.webmanifest" />
+	<style>
+		body {
+		  background: #000;
+		  display: flex;
+		  align-items: center;
+		  height: 100vh;
+		  justify-content: center;
+		  margin: 0;
+		}
+
+		.watch-face {
+		  height: 125px;
+		  width: 125px;
+		  animation: pulse 5s cubic-bezier(0.5, 0, 0.5, 1) alternate infinite;
+		}
+
+		.circle {
+		  height: 125px;
+		  width: 125px;
+		  border-radius: 50%;
+		  position: absolute;
+		  mix-blend-mode: screen;
+		  transform: translate(0, 0);
+		  animation: center 6s infinite;
+		}
+
+		.circle:nth-child(odd) {
+		  background: #61bea2;
+		}
+
+		.circle:nth-child(even) {
+		  background: #529ca0;
+		}
+
+		.circle:nth-child(1) {
+		  animation: circle-1 5s ease alternate infinite;
+		}
+
+		.circle:nth-child(2) {
+		  animation: circle-2 5s ease alternate infinite;
+		}
+
+		.circle:nth-child(3) {
+		  animation: circle-3 5s ease alternate infinite;
+		}
+
+		.circle:nth-child(4) {
+		  animation: circle-4 5s ease alternate infinite;
+		}
+
+		.circle:nth-child(5) {
+		  animation: circle-5 5s ease alternate infinite;
+		}
+
+		.circle:nth-child(6) {
+		  animation: circle-6 5s ease alternate infinite;
+		}
+
+		@keyframes pulse {
+		  0% {
+			transform: scale(.15) rotate(180deg);
+		  }
+		  100% {
+			transform: scale(1);
+		  }
+		}
+
+		@keyframes circle-1 {
+		  0% {
+			transform: translate(0, 0);
+		  }
+		  100% {
+			transform: translate(-35px, -50px);
+		  }
+		}
+
+		@keyframes circle-2 {
+		  0% {
+			transform: translate(0, 0);
+		  }
+		  100% {
+			transform: translate(35px, 50px);
+		  }
+		}
+
+		@keyframes circle-3 {
+		  0% {
+			transform: translate(0, 0);
+		  }
+		  100% {
+			transform: translate(-60px, 0);
+		  }
+		}
+
+		@keyframes circle-4 {
+		  0% {
+			transform: translate(0, 0);
+		  }
+		  100% {
+			transform: translate(60px, 0);
+		  }
+		}
+
+		@keyframes circle-5 {
+		  0% {
+			transform: translate(0, 0);
+		  }
+		  100% {
+			transform: translate(-35px, 50px);
+		  }
+		}
+
+		@keyframes circle-6 {
+		  0% {
+			transform: translate(0, 0);
+		  }
+		  100% {
+			transform: translate(35px, -50px);
+		  }
+		}
+	</style>
+</head>
+<body>
+	<div class="watch-face">
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
+		<div class="circle"></div>
+	</div>
+</body>
+<script>
+	var control = document.querySelector(".watch-face");
+	var count = 0;
+
+	for(var i = 0; i < control.children.length; i++) {
+		var item = control.children[i];
+		item.style.animationPlayState = "paused";
+	}
+
+	control.style.animationPlayState = "paused";
+	document.body.onmousedown = start;
+	
+	function preload() {
+		var inhale = new Audio('inhale.mp3');
+		var exhale = new Audio('exhale.mp3');
+		inhale.volume = 0;
+		exhale.volume = 0;
+		inhale.play();
+		exhale.play();
+	}
+
+	var inhale = new Audio('inhale.mp3');
+	var exhale = new Audio('exhale.mp3');
+	var timer = 0;
+
+	function play() {
+		if(count == 24) {
+			for(var i = 0; i < control.children.length; i++) {
+				var item = control.children[i];
+				item.style.animationPlayState = "paused";
+			}
+			control.style.animationPlayState = "paused";
+			clearInterval(timer);
+			document.body.onmousedown = start;
+			count = 0;
+			return;
+		}
+		if(count++ % 2 == 0) {
+			inhale.play();
+		}
+		else {
+			exhale.play();
+		}
+	}
+
+	function start() {
+		if(count == 0) {
+			document.body.onmousedown = null;
+		}
+		preload();
+		timer = setInterval(play, 5000);
+		for(var i = 0; i < control.children.length; i++) {
+			var item = control.children[i];
+			item.style.animationPlayState = "running";
+		}
+		control.style.animationPlayState = "running";
+		play();
+	}
+</script>
+</html>
