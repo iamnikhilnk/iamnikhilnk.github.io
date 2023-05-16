@@ -138,6 +138,7 @@
 		<div class="circle"></div>
 	</div>
 </body>
+<script type="application/javascript" src="nosleep.js"></script>
 <script>
 	var control = document.querySelector(".watch-face");
 	var count = 0;
@@ -162,6 +163,7 @@
 	var inhale = new Audio('inhale.mp3');
 	var exhale = new Audio('exhale.mp3');
 	var timer = 0;
+	var noSleep = new NoSleep();
 
 	function play() {
 		if(count == 24) {
@@ -185,6 +187,9 @@
 
 	function start() {
 		document.body.requestFullscreen();
+		if(!noSleep.enabled) {
+			noSleep.enable();
+		}
 		if(count == 0) {
 			document.body.onmousedown = null;
 		}
